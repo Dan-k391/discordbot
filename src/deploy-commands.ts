@@ -17,7 +17,7 @@ export async function deployCommands({ guildId }: DeployCommandsProps) {
         await rest.put(
             Routes.applicationGuildCommands(clientId, guildId),
             {
-            body: commandsData,
+                body: commandsData,
             }
         );
 

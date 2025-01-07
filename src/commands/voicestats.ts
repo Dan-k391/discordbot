@@ -1,4 +1,4 @@
-import { CommandInteraction, SlashCommandBuilder } from "discord.js";
+import { CommandInteraction, MessageFlags, SlashCommandBuilder } from "discord.js";
 import { getDBInstance } from "../db";
 
 const db = getDBInstance();
@@ -44,5 +44,8 @@ export async function execute(interaction: CommandInteraction) {
     const timeSpentFormatted = `${hours} hours, ${minutes} minutes, and ${seconds} seconds`;
 
     // Send the result back to the user
-    await interaction.reply(`${user.tag} has spent a total of ${timeSpentFormatted} in voice channels.`);
+    await interaction.reply({
+        content: `${user.tag} has spent a total of ${timeSpentFormatted} in voice channels.`,
+        flags: MessageFlags.Ephemeral
+    });
 }
