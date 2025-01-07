@@ -8,18 +8,6 @@ import Database from 'better-sqlite3';
 const dbPath = path.resolve(__dirname, "../data/voice_channel_usage.db");
 const db = new Database(dbPath);
 
-// Create tables
-db.exec(`
-    CREATE TABLE IF NOT EXISTS voice_sessions (
-        user_id TEXT NOT NULL,
-        channel_id TEXT NOT NULL,
-        session_start TEXT NOT NULL,
-        session_end TEXT,
-        duration_seconds INTEGER,
-        PRIMARY KEY (user_id, channel_id, session_start)
-    )
-`);
-
 // Prepare SQL statements
 const insertSession = db.prepare(`
     INSERT INTO voice_sessions (user_id, channel_id, session_start)

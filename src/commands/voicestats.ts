@@ -27,8 +27,9 @@ export const data = new SlashCommandBuilder()
     );
 
 export async function execute(interaction: CommandInteraction) {
-    const user = interaction.user;
-    const userId = user.id;
+    // Get the user to query stats for
+    const user = interaction.options.get('user')?.user!;
+    const userId = user?.id;
 
     // Query the database for total time spent by the user
     const result = getTotalTimeSpentQuery.get(userId) as TotalTimeResult;
