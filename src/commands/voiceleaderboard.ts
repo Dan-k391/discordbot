@@ -8,7 +8,6 @@ interface LeaderboardEntry {
     total_time_seconds: number;
 }
 
-// Prepare the query for fetching the leaderboard
 const getLeaderboardQuery = db.prepare(`
     SELECT user_id, SUM(duration_seconds) AS total_time_seconds
     FROM voice_sessions
@@ -23,7 +22,6 @@ export const data = new SlashCommandBuilder()
     .setDescription('Show the leaderboard of users with the most time spent in voice channels');
 
 export async function execute(interaction: CommandInteraction) {
-    // Query the database for the leaderboard
     const results = getLeaderboardQuery.all() as LeaderboardEntry[];
 
     if (results.length === 0) {
@@ -34,10 +32,16 @@ export async function execute(interaction: CommandInteraction) {
         return;
     }
 
-    // Build the leaderboard message
     let leaderboardMessage = "**Voice Channel Leaderboard**\n\n";
-    results.forEach((entry, index) => {
-        const user = interaction.client.users.cache.get(entry.user_id);
+
+    for (const [index, entry] of results.entries()) {
+        let user;
+        try {
+            user = await interaction.client.users.fetch(entry.user_id);
+        } catch {
+            user = null;
+        }
+
         const username = user?.tag || `Unknown User (${entry.user_id})`;
 
         const hours = Math.floor(entry.total_time_seconds / 3600);
@@ -46,10 +50,9 @@ export async function execute(interaction: CommandInteraction) {
 
         const timeFormatted = `${hours}h ${minutes}m ${seconds}s`;
         leaderboardMessage += `**#${index + 1}**: ${username} - ${timeFormatted}\n`;
-    });
+    }
 
-    // Send the leaderboard to the channel
     await interaction.reply({
-        content: leaderboardMessage,
+        content: leaderboardMessage
     });
 }
