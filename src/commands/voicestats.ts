@@ -1,10 +1,7 @@
-import { Client, CommandInteraction, SlashCommandBuilder } from "discord.js";
-import Database from "better-sqlite3";
-import path from "path";
+import { CommandInteraction, SlashCommandBuilder } from "discord.js";
+import { getDBInstance } from "../db";
 
-// Initialize the SQLite database
-const dbPath = path.resolve(__dirname, "../../data/voice_channel_usage.db");
-const db = new Database(dbPath);
+const db = getDBInstance();
 
 interface TotalTimeResult {
     total_time_seconds: number | null;  // 'null' if no data is found

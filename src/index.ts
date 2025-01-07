@@ -2,11 +2,9 @@ import { token, clientId, guildId } from '../config.json';
 import { Client, Events, GatewayIntentBits, VoiceState } from 'discord.js';
 import { deployCommands } from './deploy-commands';
 import { commands } from './commands';
-import path from 'path';
-import Database from 'better-sqlite3';
+import { getDBInstance } from './db';
 
-const dbPath = path.resolve(__dirname, "../data/voice_channel_usage.db");
-const db = new Database(dbPath);
+const db = getDBInstance();
 
 // Prepare SQL statements
 const insertSession = db.prepare(`
