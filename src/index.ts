@@ -1,5 +1,5 @@
 import { token, clientId, guildId } from '../config.json';
-import { Client, Events, GatewayIntentBits, VoiceState } from 'discord.js';
+import { ChatInputCommandInteraction, Client, Events, GatewayIntentBits, VoiceState } from 'discord.js';
 import { deployCommands } from './deploy-commands';
 import { commands } from './commands';
 import { getDBInstance } from './db';
@@ -43,10 +43,13 @@ client.on(Events.GuildCreate, async (guild) => {
 client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isCommand()) return;
 
-    const { commandName } = interaction;
+    const commandName = interaction.commandName;
 
     if (commands[commandName as keyof typeof commands]) {
-        await commands[commandName as keyof typeof commands].execute(interaction);
+        await commands[commandName as keyof typeof commands].execute(interaction as ChatInputCommandInteraction);
+    }
+    else {
+        await interaction.reply("Command not recognized.");
     }
 });
 
